@@ -2,7 +2,8 @@
 
 > Material didático desenvolvido para alunos da **Unipac**.
 > 
-> Prof. Rodrigo Fernandes dos Santos 
+> Prof. Rodrigo Fernandes dos Santos
+> 
 > Não é necessário ter experiência prévia com POO para acompanhar este projeto.
 
 ---
