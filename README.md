@@ -1,6 +1,7 @@
 # Tutorial SOLID — Princípios de Orientação a Objetos em Java
 
 > Material didático desenvolvido para alunos da **Unipac**.
+> 
 > Prof. Rodrigo Fernandes dos Santos 
 > Não é necessário ter experiência prévia com POO para acompanhar este projeto.
 
