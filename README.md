@@ -1,6 +1,7 @@
 # Tutorial SOLID — Princípios de Orientação a Objetos em Java
 
-> Material didático desenvolvido para alunos da **Unipac**.  
+> Material didático desenvolvido para alunos da **Unipac**. 
+> Prof. Rodrigo Fernandes dos Santos 
 > Não é necessário ter experiência prévia com POO para acompanhar este projeto.
 
 ---
@@ -395,4 +396,4 @@ Pode usar EnviadorDeEmail ou EnviadorDeSms sem mudar uma linha do serviço.
 
 ---
 
-*Material produzido para a disciplina de Programação Orientada a Objetos — Unipac*
+*Material produzido para a disciplina de Construção e Arquitetura de Software — Unipac*
