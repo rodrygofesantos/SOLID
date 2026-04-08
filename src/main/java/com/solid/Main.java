@@ -28,38 +28,18 @@ import com.solid.d.EnviadorDeSms;
 import com.solid.d.ServicoDeNotificacao;
 
 import java.util.List;
+import java.util.Scanner;
 
-/**
- * ╔══════════════════════════════════════════════════════════════════════════╗
- * ║          TUTORIAL PRÁTICO — OS 5 PRINCÍPIOS SOLID EM JAVA              ║
- * ╠══════════════════════════════════════════════════════════════════════════╣
- * ║                                                                          ║
- * ║  S — Single Responsibility  (Responsabilidade Única)                    ║
- * ║  O — Open/Closed            (Aberto/Fechado)                            ║
- * ║  L — Liskov Substitution    (Substituição de Liskov)                    ║
- * ║  I — Interface Segregation  (Segregação de Interface)                   ║
- * ║  D — Dependency Inversion   (Inversão de Dependência)                   ║
- * ║                                                                          ║
- * ╠══════════════════════════════════════════════════════════════════════════╣
- * ║  Para compilar e executar:                                               ║
- * ║    mvn clean package                                                     ║
- * ║    java -jar target/solid-principios.jar                                 ║
- * ╚══════════════════════════════════════════════════════════════════════════╝
- *
- * Esta é a classe PRINCIPAL (ponto de entrada do programa).
- * Em Java, todo programa começa pelo método "public static void main".
- * É como a "porta de entrada" do seu código.
- */
 public class Main {
+
+    private static final String LINHA_GROSSA = "═".repeat(65);
+    private static final String LINHA_FINA   = "─".repeat(65);
+
+    // Scanner compartilhado por todos os métodos
+    private static final Scanner TECLADO = new Scanner(System.in);
 
     // ── Helpers de formatação ─────────────────────────────────────────────────
 
-    // String.repeat(n) = repete o caractere n vezes
-    // Usamos para criar linhas decorativas no console
-    private static final String LINHA_GROSSA  = "═".repeat(65);
-    private static final String LINHA_FINA    = "─".repeat(65);
-
-    /** Imprime um cabeçalho grande para cada princípio. */
     private static void cabecalho(String titulo) {
         System.out.println();
         System.out.println(LINHA_GROSSA);
@@ -67,7 +47,6 @@ public class Main {
         System.out.println(LINHA_GROSSA);
     }
 
-    /** Imprime um separador de seção menor. */
     private static void secao(String rotulo) {
         System.out.println();
         System.out.println(LINHA_FINA);
@@ -75,16 +54,23 @@ public class Main {
         System.out.println(LINHA_FINA);
     }
 
+    // ── Breakpoint ────────────────────────────────────────────────────────────
+    //
+    // Este método simula um "breakpoint" de depurador:
+    // o programa para, exibe uma dica do que vai acontecer a seguir
+    // e só continua quando o aluno pressionar ENTER.
+
+    private static void breakpoint(String dica) {
+        System.out.println();
+        System.out.println("  ┌─── BREAKPOINT ─────────────────────────────────────────────┐");
+        System.out.printf ("  │  ► %s%n", dica);
+        System.out.println("  │  Pressione ENTER para executar o próximo passo...           │");
+        System.out.println("  └────────────────────────────────────────────────────────────┘");
+        TECLADO.nextLine(); // pausa aqui até o aluno pressionar ENTER
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * Método principal — ponto de entrada do programa.
-     *
-     * "public"  = pode ser chamado de qualquer lugar
-     * "static"  = pertence à classe, não a um objeto específico
-     * "void"    = não retorna nenhum valor
-     * "String[] args" = argumentos passados pela linha de comando (podemos ignorar)
-     */
     public static void main(String[] args) {
 
         System.out.println();
@@ -93,225 +79,323 @@ public class Main {
         System.out.println("  ║         Desenvolvido para alunos de programação                ║");
         System.out.println("  ╚═══════════════════════════════════════════════════════════════╝");
 
-        // Cada método abaixo demonstra UM princípio SOLID
-        demoPrincipioS();
-        demoPrincipioO();
-        demoPrincipioL();
-        demoPrincipioI();
-        demoPrincipioD();
+        boolean continuar = true;
 
+        while (continuar) {
+            System.out.println();
+            System.out.println(LINHA_GROSSA);
+            System.out.println("  MENU — Escolha qual princípio demonstrar:");
+            System.out.println(LINHA_FINA);
+            System.out.println("  [S] Responsabilidade Única");
+            System.out.println("  [O] Aberto/Fechado");
+            System.out.println("  [L] Substituição de Liskov");
+            System.out.println("  [I] Segregação de Interface");
+            System.out.println("  [D] Inversão de Dependência");
+            System.out.println("  [T] Todos os princípios");
+            System.out.println("  [0] Sair");
+            System.out.println(LINHA_GROSSA);
+            System.out.print("  Digite sua opção: ");
+
+            String opcao = TECLADO.nextLine().trim().toUpperCase();
+
+            switch (opcao) {
+                case "S" -> demoPrincipioS();
+                case "O" -> demoPrincipioO();
+                case "L" -> demoPrincipioL();
+                case "I" -> demoPrincipioI();
+                case "D" -> demoPrincipioD();
+                case "T" -> {
+                    demoPrincipioS();
+                    demoPrincipioO();
+                    demoPrincipioL();
+                    demoPrincipioI();
+                    demoPrincipioD();
+                }
+                case "0" -> continuar = false;
+                default  -> System.out.println("  Opção inválida. Digite S, O, L, I, D, T ou 0.");
+            }
+        }
+
+        TECLADO.close();
         System.out.println();
         System.out.println(LINHA_GROSSA);
-        System.out.println("  Todos os 5 princípios SOLID foram demonstrados com sucesso!");
+        System.out.println("  Até logo!");
         System.out.println(LINHA_GROSSA);
     }
 
     // =========================================================================
-    //  S — RESPONSABILIDADE ÚNICA (Single Responsibility Principle)
+    //  S — RESPONSABILIDADE ÚNICA
     // =========================================================================
 
-    /**
-     * Demonstra o Princípio S:
-     *
-     * Cada classe tem UMA responsabilidade:
-     *   Pedido              → guarda os dados
-     *   RepositorioDePedido → salva e busca
-     *   ServicoDePedido     → valida e orquestra
-     *   EmissorDeNota       → formata e imprime
-     *
-     * Se o banco de dados mudar → só RepositorioDePedido muda.
-     * Se o layout da nota mudar → só EmissorDeNota muda.
-     * Se as regras mudarem     → só ServicoDePedido muda.
-     */
     private static void demoPrincipioS() {
         cabecalho("S — RESPONSABILIDADE ÚNICA");
         System.out.println("  Cada classe tem UM único motivo para mudar.");
         System.out.println();
-        System.out.println("  Classes envolvidas:");
+        System.out.println("  Vamos criar 4 objetos, cada um com sua responsabilidade:");
         System.out.println("    Pedido              → guarda os dados do pedido");
         System.out.println("    RepositorioDePedido → salva e busca pedidos");
         System.out.println("    ServicoDePedido     → valida e processa");
         System.out.println("    EmissorDeNota       → formata e imprime a nota");
 
-        // Criamos cada "colaborador" separadamente
-        // (cada um com sua responsabilidade específica)
+        breakpoint("Criando os objetos RepositorioDePedido, EmissorDeNota e ServicoDePedido...");
+
         RepositorioDePedido repositorio = new RepositorioDePedido();
         EmissorDeNota       emissor     = new EmissorDeNota();
         ServicoDePedido     servico     = new ServicoDePedido(repositorio, emissor);
 
-        secao("Realizando Pedido #001 — Notebook");
-        // "new Pedido(...)" cria um objeto Pedido com os dados fornecidos
+        System.out.println("  ✔ Objetos criados! Cada um cuida só do que é seu.");
+        System.out.println("    ServicoDePedido recebeu o repositório e o emissor via construtor.");
+        System.out.println("    Isso é INJEÇÃO DE DEPENDÊNCIA — ele não cria, recebe pronto.");
+
+        breakpoint("Criando o Pedido #001 (Ana Souza — Notebook Dell Inspiron)...");
+
         Pedido pedido1 = new Pedido("001", "Ana Souza", "Notebook Dell Inspiron", 1, 3499.90);
+        System.out.println("  ✔ Objeto Pedido criado: " + pedido1);
+
+        breakpoint("Chamando servico.realizarPedido(pedido1) → valida → salva → emite nota...");
+
+        secao("Passo a passo: validar → salvar → emitir nota");
         servico.realizarPedido(pedido1);
 
-        secao("Realizando Pedido #002 — Fone de Ouvido");
+        breakpoint("Pedido #001 processado! Criando o Pedido #002 (Carlos Lima — Fone JBL)...");
+
         Pedido pedido2 = new Pedido("002", "Carlos Lima", "Fone Bluetooth JBL", 2, 289.90);
+        System.out.println("  ✔ Objeto Pedido criado: " + pedido2);
+
+        breakpoint("Processando o Pedido #002...");
+
+        secao("Passo a passo: validar → salvar → emitir nota");
         servico.realizarPedido(pedido2);
 
-        secao("Consultando todos os pedidos no repositório");
+        breakpoint("Ambos os pedidos processados! Consultando o repositório para ver o que foi salvo...");
+
+        secao("Conteúdo do repositório (banco de dados simulado)");
         repositorio.buscarTodos().forEach(p ->
                 System.out.println("  [Repositório] → " + p));
+
+        System.out.println();
+        System.out.println("  CONCLUSÃO DO PRINCÍPIO S:");
+        System.out.println("  Se o banco de dados mudar  → só RepositorioDePedido muda.");
+        System.out.println("  Se o layout da nota mudar  → só EmissorDeNota muda.");
+        System.out.println("  Se as regras mudarem       → só ServicoDePedido muda.");
+        System.out.println("  A classe Pedido nunca precisa mudar por causa disso.");
     }
 
     // =========================================================================
-    //  O — ABERTO/FECHADO (Open/Closed Principle)
+    //  O — ABERTO/FECHADO
     // =========================================================================
 
-    /**
-     * Demonstra o Princípio O:
-     *
-     * CalculadoraDePedido está FECHADA para modificação — seu código
-     * nunca muda, mesmo quando adicionamos novos tipos de desconto.
-     *
-     * O sistema está ABERTO para extensão — podemos criar DescontoSazonal,
-     * DescontoFidelidade, DescontoCupom... sem tocar na calculadora.
-     */
     private static void demoPrincipioO() {
         cabecalho("O — ABERTO/FECHADO");
-        System.out.println("  CalculadoraDePedido nunca é modificada.");
-        System.out.println("  Novos descontos são adicionados apenas criando novas classes.");
+        System.out.println("  CalculadoraDePedido NUNCA é modificada.");
+        System.out.println("  Cada novo desconto = uma nova classe. O código antigo fica intacto.");
 
         double precoBase = 1000.00;
-        System.out.printf("%n  Preço base: R$ %.2f%n", precoBase);
+        System.out.printf("%n  Preço base para todos os exemplos: R$ %.2f%n", precoBase);
 
-        secao("Desconto Sazonal: Black Friday (25% off)");
-        // Adicionamos este desconto SEM modificar CalculadoraDePedido
+        breakpoint("Criando CalculadoraDePedido com DescontoSazonal('Black Friday', 25%)...");
+
+        secao("Desconto Sazonal — Black Friday (25% off)");
         CalculadoraDePedido calcBlackFriday =
                 new CalculadoraDePedido(new DescontoSazonal("Black Friday", 0.25));
+        System.out.println("  ✔ CalculadoraDePedido criada com DescontoSazonal injetado.");
+
+        breakpoint("Chamando calcBlackFriday.calcularPrecoFinal(1000.00)...");
+
         calcBlackFriday.calcularPrecoFinal(precoBase);
 
-        secao("Desconto Sazonal: Natal (15% off)");
+        breakpoint("Criando OUTRA CalculadoraDePedido — agora com DescontoSazonal('Natal', 15%)...");
+
+        secao("Desconto Sazonal — Natal (15% off)");
         CalculadoraDePedido calcNatal =
                 new CalculadoraDePedido(new DescontoSazonal("Natal", 0.15));
+
+        breakpoint("Chamando calcNatal.calcularPrecoFinal(1000.00)...");
+
         calcNatal.calcularPrecoFinal(precoBase);
 
-        secao("Desconto Fidelidade: Cliente Ouro (20% off)");
-        // Mais um novo desconto — CalculadoraDePedido continua intocada!
+        breakpoint("Agora com DescontoFidelidade(OURO) — 20% off. CalculadoraDePedido nunca foi tocada!");
+
+        secao("Desconto Fidelidade — Cliente Ouro (20% off)");
         CalculadoraDePedido calcOuro =
                 new CalculadoraDePedido(new DescontoFidelidade(DescontoFidelidade.Categoria.OURO));
+
+        breakpoint("Chamando calcOuro.calcularPrecoFinal(1000.00)...");
+
         calcOuro.calcularPrecoFinal(precoBase);
 
-        secao("Desconto Fidelidade: Cliente Prata (10% off)");
+        breakpoint("Por último: DescontoFidelidade(PRATA) — 10% off...");
+
+        secao("Desconto Fidelidade — Cliente Prata (10% off)");
         CalculadoraDePedido calcPrata =
                 new CalculadoraDePedido(new DescontoFidelidade(DescontoFidelidade.Categoria.PRATA));
         calcPrata.calcularPrecoFinal(precoBase);
+
+        System.out.println();
+        System.out.println("  CONCLUSÃO DO PRINCÍPIO O:");
+        System.out.println("  Adicionamos 4 tipos de desconto diferentes.");
+        System.out.println("  A classe CalculadoraDePedido NÃO foi modificada nenhuma vez.");
+        System.out.println("  Aberta para extensão, fechada para modificação.");
     }
 
     // =========================================================================
-    //  L — SUBSTITUIÇÃO DE LISKOV (Liskov Substitution Principle)
+    //  L — SUBSTITUIÇÃO DE LISKOV
     // =========================================================================
 
-    /**
-     * Demonstra o Princípio L:
-     *
-     * CalculadoraDeArea trabalha com "List<Forma>" — não importa se
-     * a lista tem Retangulo, Circulo, ou qualquer forma futura.
-     * O resultado é sempre correto porque todas as subclasses
-     * honram o contrato de area().
-     *
-     * Sem este princípio, precisaríamos de "instanceof" para cada tipo —
-     * código frágil que quebra a cada nova forma adicionada.
-     */
     private static void demoPrincipioL() {
         cabecalho("L — SUBSTITUIÇÃO DE LISKOV");
-        System.out.println("  Qualquer subclasse de Forma pode substituir Forma sem quebrar nada.");
-        System.out.println("  CalculadoraDeArea usa List<Forma> — não importa se é Retangulo ou Circulo.");
+        System.out.println("  Subclasses devem poder substituir a classe mãe sem quebrar nada.");
+        System.out.println("  Forma é a classe mãe. Retangulo e Circulo são as filhas.");
 
-        CalculadoraDeArea calculadora = new CalculadoraDeArea();
+        breakpoint("Criando uma lista mista com Retangulos e Circulos (todos do tipo Forma)...");
 
-        // Lista mista de formas — polimorfismo em ação!
-        // A CalculadoraDeArea não sabe (e não precisa saber) os tipos concretos.
+        // Todos declarados como "Forma" — o tipo concreto fica escondido
         List<Forma> formas = List.of(
-                new Retangulo(5.0, 3.0),    // área = 15.0
-                new Circulo(4.0),            // área = π × 16 ≈ 50.27
-                new Retangulo(10.0, 2.5),   // área = 25.0
-                new Circulo(1.5)             // área = π × 2.25 ≈ 7.07
+                new Retangulo(5.0, 3.0),
+                new Circulo(4.0),
+                new Retangulo(10.0, 2.5),
+                new Circulo(1.5)
         );
 
-        secao("Calculando áreas de uma lista mista (Retangulos e Circulos)");
+        System.out.println("  ✔ Lista criada com " + formas.size() + " formas:");
+        for (Forma f : formas) {
+            System.out.println("      → " + f.nome() + "  (tipo real: " + f.getClass().getSimpleName() + ")");
+        }
+        System.out.println();
+        System.out.println("  Observe: a variável é do tipo 'Forma', mas o objeto real");
+        System.out.println("  pode ser Retangulo ou Circulo — isso é POLIMORFISMO.");
+
+        breakpoint("Criando CalculadoraDeArea e chamando areaTotal(formas)...");
+
+        secao("CalculadoraDeArea processando a lista — chamando forma.area() para cada uma");
+        CalculadoraDeArea calculadora = new CalculadoraDeArea();
         calculadora.areaTotal(formas);
+
+        System.out.println();
+        System.out.println("  CONCLUSÃO DO PRINCÍPIO L:");
+        System.out.println("  CalculadoraDeArea nunca usou 'instanceof Retangulo' ou 'instanceof Circulo'.");
+        System.out.println("  Ela só chamou forma.area() — e cada subclasse respondeu corretamente.");
+        System.out.println("  Isso é Liskov: subclasses substituem a mãe sem surpresas.");
     }
 
     // =========================================================================
-    //  I — SEGREGAÇÃO DE INTERFACE (Interface Segregation Principle)
+    //  I — SEGREGAÇÃO DE INTERFACE
     // =========================================================================
 
-    /**
-     * Demonstra o Princípio I:
-     *
-     * Impressora implementa APENAS Imprimivel — ela não é forçada
-     * a ter métodos de salvar ou escanear que não fazem sentido para ela.
-     *
-     * DispositivoMultiFuncional implementa as três interfaces porque
-     * ele genuinamente suporta as três operações.
-     *
-     * Clientes recebem apenas a interface que precisam — acoplamento mínimo.
-     */
     private static void demoPrincipioI() {
         cabecalho("I — SEGREGAÇÃO DE INTERFACE");
-        System.out.println("  Nenhuma classe é forçada a implementar métodos que não usa.");
-        System.out.println("  Interfaces pequenas e focadas > uma interface gigante.");
+        System.out.println("  Nenhuma classe deve ser forçada a implementar métodos que não usa.");
+        System.out.println("  Solução: dividir em interfaces pequenas e focadas.");
+        System.out.println();
+        System.out.println("  Interfaces criadas:");
+        System.out.println("    Imprimivel  → só define imprimir()");
+        System.out.println("    Salvavel    → só define salvar()");
+        System.out.println("    Escaneavel  → só define escanear()");
 
-        secao("Impressora simples — implementa apenas Imprimivel");
+        breakpoint("Criando uma Impressora simples — ela implementa APENAS Imprimivel...");
+
+        secao("Impressora simples — só sabe imprimir");
         Impressora impressoraSimples = new Impressora("HP LaserJet 107a");
+        System.out.println("  ✔ Impressora criada. Ela NÃO tem salvar() nem escanear().");
+        System.out.println("    Se tentasse chamar impressoraSimples.salvar(...) → erro de compilação!");
+        System.out.println("    O compilador protege o aluno de chamar algo que não existe.");
+
+        breakpoint("Chamando impressoraSimples.imprimir(...)...");
+
         impressoraSimples.imprimir("Relatório Mensal de Vendas");
-        // impressoraSimples.salvar(...) ← NÃO EXISTE — honesto!
-        // impressoraSimples.escanear(...) ← NÃO EXISTE — honesto!
+
+        breakpoint("Criando DispositivoMultiFuncional — implementa as 3 interfaces ao mesmo tempo...");
 
         secao("Dispositivo Multifuncional — implementa Imprimivel + Salvavel + Escaneavel");
         DispositivoMultiFuncional mfp = new DispositivoMultiFuncional("Canon PIXMA G3160");
+        System.out.println("  ✔ MFP criado. Ele pode imprimir, salvar E escanear.");
+
+        breakpoint("Chamando mfp.imprimir(...)...");
+
         mfp.imprimir("Contrato de Prestação de Serviços");
+
+        breakpoint("Chamando mfp.salvar(...)...");
+
         mfp.salvar("Contrato de Prestação de Serviços", "/documentos/contratos/");
+
+        breakpoint("Chamando mfp.escanear(...)...");
+
         String escaneado = mfp.escanear("RG_frente.jpg");
         System.out.println("  [Resultado]  Conteúdo escaneado: " + escaneado);
 
-        secao("Usando o MFP apenas como Imprimivel (acoplamento mínimo)");
-        // Um método que só precisa imprimir recebe "Imprimivel"
-        // Ele não precisa saber que o objeto também sabe salvar e escanear
-        Imprimivel apenasImprimir = mfp;  // polimorfismo!
+        breakpoint("Agora vamos ver polimorfismo: usando o MFP apenas como Imprimivel...");
+
+        secao("Polimorfismo: MFP visto pela lente da interface Imprimivel");
+        Imprimivel apenasImprimir = mfp;
+        System.out.println("  ✔ A variável 'apenasImprimir' é do tipo Imprimivel.");
+        System.out.println("    Ela aponta para o mesmo MFP, mas agora só enxerga imprimir().");
+        System.out.println("    salvar() e escanear() ficam invisíveis — acoplamento mínimo!");
+
+        breakpoint("Chamando apenasImprimir.imprimir(...)...");
+
         apenasImprimir.imprimir("Orçamento Q1 2025");
-        // apenasImprimir.salvar(...)   ← invisível nesta visão
-        // apenasImprimir.escanear(...) ← invisível nesta visão
+
+        System.out.println();
+        System.out.println("  CONCLUSÃO DO PRINCÍPIO I:");
+        System.out.println("  Impressora nunca foi forçada a ter salvar() ou escanear().");
+        System.out.println("  MFP tem os 3 porque realmente os suporta — nenhuma mentira.");
+        System.out.println("  Clientes recebem só a interface que precisam.");
     }
 
     // =========================================================================
-    //  D — INVERSÃO DE DEPENDÊNCIA (Dependency Inversion Principle)
+    //  D — INVERSÃO DE DEPENDÊNCIA
     // =========================================================================
 
-    /**
-     * Demonstra o Princípio D:
-     *
-     * ServicoDeNotificacao (alto nível) depende APENAS da abstração
-     * EnviadorDeMensagem. Ele nunca menciona EnviadorDeEmail ou EnviadorDeSms.
-     *
-     * Para trocar o canal de notificação, basta injetar uma implementação
-     * diferente no construtor — zero linhas alteradas no serviço.
-     *
-     * Isso é "Inversão de Dependência": os detalhes (email, sms) é que
-     * dependem da abstração, não o contrário.
-     */
     private static void demoPrincipioD() {
         cabecalho("D — INVERSÃO DE DEPENDÊNCIA");
-        System.out.println("  ServicoDeNotificacao depende da ABSTRAÇÃO EnviadorDeMensagem.");
-        System.out.println("  O canal (e-mail, SMS...) é injetado de fora — zero código alterado no serviço.");
+        System.out.println("  Alto nível (ServicoDeNotificacao) depende da ABSTRAÇÃO.");
+        System.out.println("  Baixo nível (Email, SMS) implementa a abstração.");
+        System.out.println();
+        System.out.println("  SEM o princípio D (ruim):");
+        System.out.println("    private EmailSender email = new EmailSender(); // hard-coded!");
+        System.out.println("    // impossível trocar para SMS sem modificar a classe");
+        System.out.println();
+        System.out.println("  COM o princípio D (correto):");
+        System.out.println("    private EnviadorDeMensagem enviador; // depende da abstração");
+        System.out.println("    // qualquer implementação pode ser injetada pelo construtor");
 
-        secao("ServicoDeNotificacao usando E-mail");
-        // Injetamos EnviadorDeEmail no construtor
+        breakpoint("Criando ServicoDeNotificacao injetando EnviadorDeEmail no construtor...");
+
+        secao("Cenário 1: notificações por E-mail");
         ServicoDeNotificacao porEmail =
                 new ServicoDeNotificacao(new EnviadorDeEmail());
+        System.out.println("  ✔ ServicoDeNotificacao criado com EnviadorDeEmail injetado.");
+        System.out.println("    O serviço não sabe que é e-mail — só conhece EnviadorDeMensagem.");
+
+        breakpoint("Chamando porEmail.enviarConfirmacaoDePedido(...)...");
+
         porEmail.enviarConfirmacaoDePedido("ana.souza@email.com", "001");
+
+        breakpoint("Chamando porEmail.enviarAtualizacaoDeEnvio(...)...");
+
         porEmail.enviarAtualizacaoDeEnvio("ana.souza@email.com", "001", "BR112233445BR");
 
-        secao("ServicoDeNotificacao usando SMS (zero linhas mudadas no serviço!)");
-        // Trocamos apenas a implementação injetada — ServicoDeNotificacao é idêntico
+        breakpoint("Agora trocamos para SMS — criando NOVO ServicoDeNotificacao com EnviadorDeSms...");
+
+        secao("Cenário 2: as mesmas notificações, agora por SMS");
         ServicoDeNotificacao porSms =
                 new ServicoDeNotificacao(new EnviadorDeSms());
+        System.out.println("  ✔ ServicoDeNotificacao criado com EnviadorDeSms injetado.");
+        System.out.println("    O código do ServicoDeNotificacao é IDÊNTICO ao de cima.");
+        System.out.println("    Só a implementação injetada mudou.");
+
+        breakpoint("Chamando porSms.enviarConfirmacaoDePedido(...)...");
+
         porSms.enviarConfirmacaoDePedido("+55 31 98765-4321", "002");
+
+        breakpoint("Chamando porSms.enviarAtualizacaoDeEnvio(...)...");
+
         porSms.enviarAtualizacaoDeEnvio("+55 31 98765-4321", "002", "BR554433221BR");
 
-        secao("Conclusão do Princípio D");
-        System.out.println("  O código de ServicoDeNotificacao NÃO foi modificado entre as duas chamadas.");
-        System.out.println("  Apenas a implementação de EnviadorDeMensagem foi trocada.");
-        System.out.println("  Alto nível + baixo nível dependendo da abstração = sistema flexível!");
+        System.out.println();
+        System.out.println("  CONCLUSÃO DO PRINCÍPIO D:");
+        System.out.println("  ServicoDeNotificacao NÃO foi modificado entre os dois cenários.");
+        System.out.println("  Trocar o canal = trocar a implementação injetada. Só isso.");
+        System.out.println("  Para testar sem enviar e-mail/SMS de verdade: injete um EnviadorFalso.");
     }
 }
