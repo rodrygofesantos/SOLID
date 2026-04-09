@@ -8,6 +8,7 @@ import com.solid.s.ServicoDePedido;
 
 // ── Princípio O: Aberto/Fechado ───────────────────────────────────────────────
 import com.solid.o.CalculadoraDePedido;
+import com.solid.o.DescontoEstudante;
 import com.solid.o.DescontoFidelidade;
 import com.solid.o.DescontoSazonal;
 
@@ -224,17 +225,39 @@ public class Main {
 
         calcOuro.calcularPrecoFinal(precoBase);
 
-        breakpoint("Por último: DescontoFidelidade(PRATA) — 10% off...");
+        breakpoint("Por último antes do novo: DescontoFidelidade(PRATA) — 10% off...");
 
         secao("Desconto Fidelidade — Cliente Prata (10% off)");
         CalculadoraDePedido calcPrata =
                 new CalculadoraDePedido(new DescontoFidelidade(DescontoFidelidade.Categoria.PRATA));
         calcPrata.calcularPrecoFinal(precoBase);
 
+        // ── NOVO DESCONTO ─────────────────────────────────────────────────────
+        // Para adicionar DescontoEstudante, bastou criar o arquivo
+        // DescontoEstudante.java e instanciá-lo aqui.
+        // CalculadoraDePedido NÃO foi tocada — ela aceita qualquer Desconto.
+        // ─────────────────────────────────────────────────────────────────────
+
+        breakpoint("NOVO! DescontoEstudante('João Vitor') — 50% off. Apenas uma classe nova foi criada!");
+
+        secao("Desconto Estudante — 50% off  ← NOVO TIPO ADICIONADO SEM MODIFICAR NADA");
+        System.out.println("  ► O que foi feito para adicionar este desconto?");
+        System.out.println("    1. Criado o arquivo DescontoEstudante.java  ← único passo");
+        System.out.println("    2. Nada mais. CalculadoraDePedido, Desconto,");
+        System.out.println("       DescontoSazonal e DescontoFidelidade ficaram intocados.");
+
+        CalculadoraDePedido calcEstudante =
+                new CalculadoraDePedido(new DescontoEstudante("João Vitor"));
+
+        breakpoint("Chamando calcEstudante.calcularPrecoFinal(1000.00)...");
+
+        calcEstudante.calcularPrecoFinal(precoBase);
+
         System.out.println();
         System.out.println("  CONCLUSÃO DO PRINCÍPIO O:");
-        System.out.println("  Adicionamos 4 tipos de desconto diferentes.");
+        System.out.println("  Adicionamos 5 tipos de desconto diferentes.");
         System.out.println("  A classe CalculadoraDePedido NÃO foi modificada nenhuma vez.");
+        System.out.println("  Cada novo desconto = uma nova classe isolada.");
         System.out.println("  Aberta para extensão, fechada para modificação.");
     }
 
