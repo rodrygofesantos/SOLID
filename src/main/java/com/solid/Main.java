@@ -27,6 +27,7 @@ import com.solid.i.Imprimivel;
 // ── Princípio D: Inversão de Dependência ─────────────────────────────────────
 import com.solid.d.EnviadorDeEmail;
 import com.solid.d.EnviadorDeSms;
+import com.solid.d.EnviadorDeWhatsApp;
 import com.solid.d.ServicoDeNotificacao;
 
 import java.util.List;
@@ -420,10 +421,36 @@ public class Main {
 
         porSms.enviarAtualizacaoDeEnvio("+55 31 98765-4321", "002", "BR554433221BR");
 
+        // ── NOVO CANAL ────────────────────────────────────────────────────────
+        // Para adicionar WhatsApp, bastou criar EnviadorDeWhatsApp.java.
+        // ServicoDeNotificacao NÃO foi tocado — ele só conhece a abstração.
+        // ─────────────────────────────────────────────────────────────────────
+
+        breakpoint("NOVO! Trocando para WhatsApp — só a implementação injetada muda. ServicoDeNotificacao continua intocado!");
+
+        secao("Cenário 3: as mesmas notificações, agora por WhatsApp  ← NOVO CANAL");
+        System.out.println("  ► O que foi feito para adicionar WhatsApp?");
+        System.out.println("    1. Criado EnviadorDeWhatsApp.java              ← único passo!");
+        System.out.println("    2. Injetado abaixo no construtor de ServicoDeNotificacao.");
+        System.out.println("    ServicoDeNotificacao.java: zero linhas modificadas.");
+
+        ServicoDeNotificacao porWhatsApp =
+                new ServicoDeNotificacao(new EnviadorDeWhatsApp("+55 31 98000-0000"));
+        System.out.println("  ✔ ServicoDeNotificacao criado com EnviadorDeWhatsApp injetado.");
+        System.out.println("    O serviço ainda não sabe qual canal usa — só chama enviador.enviar().");
+
+        breakpoint("Chamando porWhatsApp.enviarConfirmacaoDePedido(...)...");
+
+        porWhatsApp.enviarConfirmacaoDePedido("+55 31 99999-1234", "003");
+
+        breakpoint("Chamando porWhatsApp.enviarAtualizacaoDeEnvio(...)...");
+
+        porWhatsApp.enviarAtualizacaoDeEnvio("+55 31 99999-1234", "003", "BR998877665BR");
+
         System.out.println();
         System.out.println("  CONCLUSÃO DO PRINCÍPIO D:");
-        System.out.println("  ServicoDeNotificacao NÃO foi modificado entre os dois cenários.");
-        System.out.println("  Trocar o canal = trocar a implementação injetada. Só isso.");
-        System.out.println("  Para testar sem enviar e-mail/SMS de verdade: injete um EnviadorFalso.");
+        System.out.println("  ServicoDeNotificacao NÃO foi modificado em nenhum dos 3 cenários.");
+        System.out.println("  E-mail, SMS e WhatsApp: trocar o canal = trocar a implementação injetada.");
+        System.out.println("  Para testar sem enviar mensagens de verdade: injete um EnviadorFalso.");
     }
 }
