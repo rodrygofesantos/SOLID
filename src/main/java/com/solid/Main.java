@@ -17,6 +17,7 @@ import com.solid.l.CalculadoraDeArea;
 import com.solid.l.Circulo;
 import com.solid.l.Forma;
 import com.solid.l.Retangulo;
+import com.solid.l.Triangulo;
 
 // ── Princípio I: Segregação de Interface ─────────────────────────────────────
 import com.solid.i.DispositivoMultiFuncional;
@@ -272,12 +273,14 @@ public class Main {
 
         breakpoint("Criando uma lista mista com Retangulos e Circulos (todos do tipo Forma)...");
 
-        // Todos declarados como "Forma" — o tipo concreto fica escondido
+        // Todos declarados como "Forma" — o tipo concreto fica escondido.
+        // Triangulo foi adicionado sem modificar CalculadoraDeArea — isso é Liskov!
         List<Forma> formas = List.of(
                 new Retangulo(5.0, 3.0),
                 new Circulo(4.0),
                 new Retangulo(10.0, 2.5),
-                new Circulo(1.5)
+                new Circulo(1.5),
+                new Triangulo(6.0, 4.0)   // NOVO: CalculadoraDeArea não foi tocada
         );
 
         System.out.println("  ✔ Lista criada com " + formas.size() + " formas:");
@@ -286,7 +289,7 @@ public class Main {
         }
         System.out.println();
         System.out.println("  Observe: a variável é do tipo 'Forma', mas o objeto real");
-        System.out.println("  pode ser Retangulo ou Circulo — isso é POLIMORFISMO.");
+        System.out.println("  pode ser Retangulo, Circulo ou Triangulo — isso é POLIMORFISMO.");
 
         breakpoint("Criando CalculadoraDeArea e chamando areaTotal(formas)...");
 
@@ -296,8 +299,10 @@ public class Main {
 
         System.out.println();
         System.out.println("  CONCLUSÃO DO PRINCÍPIO L:");
-        System.out.println("  CalculadoraDeArea nunca usou 'instanceof Retangulo' ou 'instanceof Circulo'.");
+        System.out.println("  CalculadoraDeArea nunca usou 'instanceof Retangulo',");
+        System.out.println("  'instanceof Circulo' ou 'instanceof Triangulo'.");
         System.out.println("  Ela só chamou forma.area() — e cada subclasse respondeu corretamente.");
+        System.out.println("  Triangulo foi adicionado criando apenas Triangulo.java.");
         System.out.println("  Isso é Liskov: subclasses substituem a mãe sem surpresas.");
     }
 
